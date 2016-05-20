@@ -13,6 +13,7 @@ var animate = window.requestAnimationFrame ||
 
 function step() {
 	ball.move();
+	computer.update(ball);
 	render();
 	animate(step);
 }

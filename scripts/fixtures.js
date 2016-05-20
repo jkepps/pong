@@ -9,10 +9,26 @@ function Ball(x, y, width, height) {
 	this.y = y;
 	this.width = width;
 	this.height = height;
-	this.speed = 7;
-	this.angle = (-1 + 2 * Math.random()) * Math.PI / 6;
+	this.speed = 12;	
+	if(Math.random()>=0.5) {
+		this.angle = Math.PI + (-1 + 2 * Math.random()) * Math.PI / 3;
+	} else {
+		this.angle = (-1 + 2 * Math.random()) * Math.PI / 3;
+	}
 	this.xSpeed = this.speed * Math.cos(this.angle);
 	this.ySpeed = this.speed * Math.sin(this.angle);
+
+	this.reset = function() {
+		this.x = x;
+		this.y = y;
+		if(Math.random()>=0.5) {
+			this.angle = Math.PI + (-1 + 2 * Math.random()) * Math.PI / 3;
+		} else {
+			this.angle = (-1 + 2 * Math.random()) * Math.PI / 3;
+		}
+		this.xSpeed = this.speed * Math.cos(this.angle);
+		this.ySpeed = this.speed * Math.sin(this.angle);
+	};
 
 	this.render = function() {
 		var radius = 10;
@@ -24,9 +40,10 @@ function Ball(x, y, width, height) {
 		context.rect(this.x, this.y, width, height);
 		context.fillStyle = 'white';
 		context.fill();
-	}
+	};
 
 	this.move = function() {
+		context.clearRect(this.x,this.y,this.width,this.height)
 		if(this.y <= 5 || this.y >= canvas.height - this.height/2) {
 			this.ySpeed *= -1;
 		}
@@ -34,18 +51,24 @@ function Ball(x, y, width, height) {
 			 this.x <= computer.paddle.x && this.x >= computer.paddle.x - computer.paddle.width && this.y >= computer.paddle.y && this.y <= computer.paddle.y + computer.paddle.height) {
 			this.xSpeed *= -1;
 		}
-		context.clearRect(this.x,this.y,this.width,this.height)
+		if (this.x + this.width > canvas.width) {
+			computer.score++;
+			this.reset();
+		} else if (this.x < 0) {
+			player1.score++;
+			this.reset();
+		}
 		this.y += this.ySpeed;
 		this.x += this.xSpeed;
-	}
+	};
 }
 
-function Paddle(x, y, width, height) {
+function Paddle(x, y, width, height, speed) {
 	this.x = x;
 	this.y = y;
 	this.width = width;
 	this.height = height;
-	this.speed = 50;
+	this.speed = speed;
 
 	this.render = function() {
 		context.beginPath();
@@ -66,9 +89,19 @@ function Paddle(x, y, width, height) {
 }
 
 function Player() {
-	this.paddle = new Paddle(740, 200, 20, 100);
+	this.paddle = new Paddle(740, 200, 20, 100, 100);
+	this.score;
 }
 
 function Computer() {
-	this.paddle = new Paddle(40, 200, 20, 100);
+	this.paddle = new Paddle(40, 200, 20, 100, 3);
+	this.score;
+
+	this.update = function(ball) {
+		if (ball.y < this.paddle.y) {
+			this.paddle.move(38)
+		} else if (ball.y > this.paddle.y + this.paddle.height) {
+			this.paddle.move(40)
+		}
+	}
 }
