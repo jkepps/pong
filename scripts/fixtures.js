@@ -14,7 +14,7 @@ function Ball(x, y, width, height) {
 		var counterClockwise = false;
 
 		context.beginPath();
-		context.arc(x,y,radius,startAngle,endAngle,counterClockwise);
+		context.arc(this.x,this.y,radius,startAngle,endAngle,counterClockwise);
 		context.fillStyle = 'white';
 		context.fill();
 	}
@@ -25,12 +25,24 @@ function Paddle(x, y, width, height) {
 	this.y = y;
 	this.width = width;
 	this.height = height;
+	this.speed = 50;
 
 	this.render = function() {
 		context.beginPath();
 		context.fillStyle = 'white';
-		context.fillRect(x,y,width,height);
+		context.fillRect(this.x,this.y,this.width,this.height);
 	}
+
+	this.move = function(dir) {
+		context.clearRect(this.x,this.y,this.width,this.height);
+		if (dir == 38) {
+			if(this.y == 0) { return }
+			this.y -= this.speed;
+		} else if (dir == 40) {
+			if(this.y >= canvas.height - this.height) { return }
+			this.y += this.speed;
+		}
+	};
 }
 
 function Player() {
