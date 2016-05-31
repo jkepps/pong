@@ -18,7 +18,15 @@ body {
 	padding: 0;
 }
 
-.scoreboard {
+
+
+.header h1 {
+	text-align: center;
+	padding-top: 0;
+	margin-top: 0;
+}
+
+.header, .scoreboard {
 	position: relative;
 	left: 50px;
 	width: 800px;
@@ -31,7 +39,7 @@ body {
 	font-size: 3rem;
 	text-transform: uppercase;
 	margin: 0;
-	left: 300px;
+	left: 293px;
 }
 
 .scoreboard .score {
